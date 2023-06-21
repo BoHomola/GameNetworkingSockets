@@ -82,9 +82,7 @@ typedef char SteamNetworkingErrMsg[ 1024 ];
 	#include <poll.h>
 	#include <errno.h>
 
-	#if !IsAndroid()
-		#include <ifaddrs.h>
-	#endif
+    #include <ifaddrs.h>
 	#include <net/if.h>
 
 	#ifndef closesocket

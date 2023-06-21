@@ -172,10 +172,21 @@ protobuf_generate_cpp(GNS_COMMON_PROTO_SRCS GNS_COMMON_PROTO_HDRS ${GNS_COMMON_P
 protobuf_generate_cpp(GNS_CLIENTLIB_PROTO_SRCS GNS_CLIENTLIB_PROTO_HDRS ${GNS_CLIENTLIB_PROTOS})
 
 function(gns_set_target_protobuf_properties TGT )
-	target_link_libraries(${TGT} PUBLIC
-		protobuf::libprotobuf
-		Threads::Threads
-		)
+    if(DEFINED ANDROID_ABI)
+        set(LIB_LOG /home/bo/Android/Sdk/ndk/25.2.9519653/toolchains/llvm/prebuilt/linux-x86_64/sysroot/usr/lib/arm-linux-androideabi/24/liblog.so)
+	    target_link_libraries(${TGT} PUBLIC
+            ${Protobuf_LIBRARIES}
+            ${LIB_LOG}
+		    Threads::Threads
+		    )
+
+        target_include_directories(${TGT} PRIVATE ${Protobuf_INCLUDE_DIR})
+    else()
+	    target_link_libraries(${TGT} PUBLIC
+	    	protobuf::libprotobuf
+		    Threads::Threads
+		    )
+    endif()
 endfunction()
 
 # Set the target properties (sources, link libs, defines) based on crypto settings
@@ -301,6 +312,8 @@ macro(set_clientlib_target_properties GNS_TARGET)
 		#	target_link_libraries(${GNS_TARGET} PRIVATE dl)
 		#endif()
 	elseif(CMAKE_SYSTEM_NAME MATCHES FreeBSD)
+
+    elseif(CMAKE_SYSTEM_NAME MATCHES Android)
 
 	elseif(CMAKE_SYSTEM_NAME MATCHES Windows)
 		if(CMAKE_CXX_COMPILER_ID MATCHES "MSVC")
