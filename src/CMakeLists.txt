@@ -4,6 +4,8 @@ include(CheckSymbolExists)
 include(CMakePushCheckState)
 include(GNUInstallDirs)
 
+cmake_policy(SET CMP0077 NEW)
+set(protobuf_MODULE_COMPATIBLE ON)
 find_package(Protobuf REQUIRED)
 find_package(Threads REQUIRED)
 
